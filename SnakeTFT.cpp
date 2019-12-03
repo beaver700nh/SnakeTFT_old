@@ -9,20 +9,16 @@ Snake::Snake(int initialLength, int cellSize)
 
   _snake = new snakePart_t[192];
 
+  snakePart_t *sp = _snake;
+
   for (int i = 0; i < initialLength; ++i)
   {
-    if (i == 0)
-    {
-      *(_snake+i) = { initialXPos-i, initialYPos, HEAD };
-    }
-    else if (i == initialLength-1)
-    {
-      *(_snake+i) = { initialXPos-i, initialYPos, TAIL };
-    }
-    else
-    {
-      *(_snake+i) = { initialXPos-i, initialYPos, BODY };
-    }
+    sp->x = initialXPos-i;
+    sp->y = initialYPos;
+    sp->part = ( i == 0 ? HEAD :
+                 i == initialLength-1 ? TAIL: BODY);
+
+    ++sp;
   }
 }
 
