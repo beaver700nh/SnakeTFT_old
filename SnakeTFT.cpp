@@ -1,4 +1,5 @@
 #include "SnakeTFT.h"
+#include <stdio.h>
 
 Snake::Snake(int initialLength, int cellSize)
 {
@@ -10,28 +11,25 @@ Snake::Snake(int initialLength, int cellSize)
 
   for (int i = 0; i < initialLength; ++i)
   {
-    switch (i)
+    if (i == 0)
     {
-      case 0:
-        *(_snake+i) = { initialXPos-i, initialYPos, HEAD };
-        break;
-
-      case initialLength-1:
-        *(_snake+i) = { initialXPos-i, initialYPos, TAIL };
-        break;
-
-      default:
-        *(_snake+i) = { initialXPos-i, initialYPos, BODY };
-        break;
+      *(_snake+i) = { initialXPos-i, initialYPos, HEAD };
+    }
+    else if (i == initialLength-1)
+    {
+      *(_snake+i) = { initialXPos-i, initialYPos, TAIL };
+    }
+    else
+    {
+      *(_snake+i) = { initialXPos-i, initialYPos, BODY };
     }
   }
-
-  Serial.begin(9600);
-  Serial.print("Snake initialized.\n");
 }
 
 void Snake::begin(Elegoo_TFTLCD *tft)
 {
+  Serial.begin(9600);
+
   _tft = tft;
 
   _tft->reset();
@@ -45,6 +43,18 @@ void Snake::begin(Elegoo_TFTLCD *tft)
   _tft->begin(0x9341);
   _tft->setRotation(3);
   _tft->fillScreen(BLACK);
+
+  Serial.print("  x  y  part\n");
+
+  snakePart_t *sp = _snake;
+
+  do
+  {
+    char data[12];
+    sprintf(data, "%1d %2d %2d %4d\n", sp-_snake, sp->x, sp->y, sp->part);
+    Serial.print(data);
+  }
+  while (++sp->part != TAIL);
 }
 
 void Snake::append(snakePart_t newPart)
