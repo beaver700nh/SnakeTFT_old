@@ -10,8 +10,20 @@ Snake::Snake(int initialLength, int cellSize)
 
   for (int i = 0; i < initialLength; ++i)
   {
-    *(_snake+i) = { initialXPos-i, initialYPos,
-    (i == 0 ? HEAD : (i == initialLength-1 ? TAIL : BODY)) };
+    switch (i)
+    {
+      case 0:
+        *(_snake+i) = { initialXPos-i, initialYPos, HEAD };
+        break;
+
+      case initialLength-1:
+        *(_snake+i) = { initialXPos-i, initialYPos, TAIL };
+        break;
+
+      default:
+        *(_snake+i) = { initialXPos-i, initialYPos, BODY };
+        break;
+    }
   }
 
   Serial.begin(9600);
